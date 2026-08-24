@@ -11,6 +11,7 @@ import (
 )
 
 func TestClient(t *testing.T) {
+	config.EnableAVCredentialTestStore()
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Config Suite")
 }

@@ -18,6 +18,7 @@ import (
 )
 
 func TestCmd(t *testing.T) {
+	config.EnableAVCredentialTestStore()
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Cmd Suite")
 }

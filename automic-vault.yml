@@ -1,0 +1,29 @@
+name:
+  isotope:uaa-cli
+
+replaces:
+  brew:uaa-cli
+
+build: |
+  GOTOOLCHAIN=go1.25.1 CGO_ENABLED=0 go test -mod=readonly ./config
+  mkdir -p bin
+  GOTOOLCHAIN=go1.25.1 CGO_ENABLED=0 go build \
+    -mod=readonly -trimpath -buildvcs=true \
+    -ldflags "-X code.cloudfoundry.org/uaa-cli/version.Version=${VERSION} -X code.cloudfoundry.org/uaa-cli/version.Commit=$(git rev-parse HEAD)" \
+    -o bin/uaa .
+  codesign --force --options runtime --timestamp \
+    --identifier uaa \
+    --sign "$CODESIGN_IDENTITY" \
+    bin/uaa
+  tar czf out.tgz bin
+
+justification:
+  title:
+    Unprotected Credential Access
+  detail: |
+    Upstream UAA CLI stores OAuth access and refresh tokens in plaintext on
+    disk.
+
+    This isotope routes target- and context-scoped token operations through
+    Automic Vault's authenticated XPC service while retaining only non-secret
+    metadata and markers on disk. Plaintext tokens fail closed.
