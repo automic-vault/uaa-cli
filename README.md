@@ -1,3 +1,24 @@
+# Automic Vault Fork Notes
+
+This repository is the Automic Vault fork of UAA CLI.
+
+Automic Vault is a macOS-first system that keeps developer credentials in
+custody and applies them only after policy or the user allows the complete
+operation requested by verified software.
+
+The [UAA CLI Isotope work](https://github.com/automic-vault/automic-vault/pull/192)
+routes target- and context-scoped access-token and refresh-token operations
+through Automic Vault's authenticated XPC service while retaining only
+non-secret metadata and markers on disk. Automic Vault's reviewed release
+workflow builds and signs the pinned executable with Hardened Runtime; the
+Hardener verifies its release digest and Automic Vault signature before
+installation.
+
+This source fork alone does not establish Hardened State. The remainder of this
+README is the original upstream UAA CLI README.
+
+---
+
 # UAA Command Line Interface
 
 CLI for [UAA](https://github.com/cloudfoundry/uaa) written in golang. This is an alterntive to using uaac which is wirtten in Ruby.  At this time it performs a limited subset of the features provided by the [uaac](https://github.com/cloudfoundry/cf-uaac) gem.  The team plans to continue development on the golang CLI going forward, and once it's considered fully GA, intends to place it alongside uaac with a long-term intention of one day deprecating uaac.
