@@ -130,7 +130,12 @@ func ReadConfig() Config {
 		return c
 	}
 
-	json.Unmarshal(data, &c)
+	if err := json.Unmarshal(data, &c); err != nil {
+		panic(fmt.Sprintf("invalid UAA CLI config: %v", err))
+	}
+	if err := hydrateAV(&c); err != nil {
+		panic(err)
+	}
 
 	return c
 }
@@ -141,7 +146,12 @@ func WriteConfig(c Config) error {
 		return err
 	}
 
-	data, err := json.Marshal(c)
+	sanitized, err := prepareAV(c)
+	if err != nil {
+		return err
+	}
+
+	data, err := json.Marshal(sanitized)
 	if err != nil {
 		return err
 	}

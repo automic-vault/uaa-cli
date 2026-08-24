@@ -30,12 +30,23 @@ var _ = Describe("Config", func() {
 		cfg.AddContext(ctx)
 
 		config.WriteConfig(cfg)
+		onDisk, err := os.ReadFile(config.ConfigPath())
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(onDisk)).To(ContainSubstring(`"access_token":"@av"`))
+		Expect(string(onDisk)).NotTo(ContainSubstring("foo-token"))
 
 		Expect(cfg.ActiveTargetName).To(Equal("url:http://nowhere.com"))
 		Expect(cfg.GetActiveContext().Token.AccessToken).To(Equal("foo-token"))
 		cfg2 := config.ReadConfig()
 		Expect(cfg2.ActiveTargetName).To(Equal("url:http://nowhere.com"))
 		Expect(cfg2.GetActiveContext().Token.AccessToken).To(Equal("foo-token"))
+	})
+
+	It("fails closed on plaintext tokens", func() {
+		Expect(os.MkdirAll(config.ConfigDir(), 0700)).To(Succeed())
+		plaintext := `{"Targets":{"url:https://uaa.example":{"BaseUrl":"https://uaa.example","Contexts":{"ctx":{"Token":{"access_token":"secret"}}}}}}`
+		Expect(os.WriteFile(config.ConfigPath(), []byte(plaintext), 0600)).To(Succeed())
+		Expect(func() { _ = config.ReadConfig() }).To(Panic())
 	})
 
 	It("can accept a context without previously setting target", func() {
