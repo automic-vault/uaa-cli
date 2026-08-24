@@ -15,7 +15,7 @@ build: |
     --identifier uaa \
     --sign "$CODESIGN_IDENTITY" \
     bin/uaa
-  tar czf out.tgz bin
+  tar czf out.tgz bin/uaa
 
 justification:
   title:
