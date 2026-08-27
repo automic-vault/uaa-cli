@@ -5,9 +5,9 @@ replaces:
   brew:uaa-cli
 
 build: |
-  GOTOOLCHAIN=go1.25.1 CGO_ENABLED=0 go test -mod=readonly ./config
+  GOTOOLCHAIN=go1.26.0 CGO_ENABLED=0 go test -mod=readonly ./config
   mkdir -p bin
-  GOTOOLCHAIN=go1.25.1 CGO_ENABLED=0 go build \
+  GOTOOLCHAIN=go1.26.0 CGO_ENABLED=0 go build \
     -mod=readonly -trimpath -buildvcs=true \
     -ldflags "-X code.cloudfoundry.org/uaa-cli/version.Version=${VERSION} -X code.cloudfoundry.org/uaa-cli/version.Commit=$(git rev-parse HEAD)" \
     -o bin/uaa .
